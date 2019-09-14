@@ -46,10 +46,11 @@ class Game:
 
     def get_units_for_team(self, player_id):
         units = []
-        for row in self.game["map"]["tiles"]:
-            for tile in row:
-                if tile.unit and tile.unit.player_id == player_id:
-                    units.append(tile.unit)
+        for row in range(len(self.game["map"]["tiles"])):
+            for col in range(len(self.game["map"]["tiles"][row])):
+                current_tile = self.get_tile((row, col))
+                if current_tile.unit and current_tile.unit.player_id == player_id:
+                    units.append(current_tile.unit)
         return units
 
     # Returns the player"s units
