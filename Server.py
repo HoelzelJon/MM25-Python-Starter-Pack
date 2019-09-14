@@ -11,7 +11,7 @@ app = Flask(__name__)
 def game_init():
     state = request.get_json(force=True)
 
-    my_game = Strategy(state, state['playerNum'])
+    my_game = Strategy(state)
     games[state.get('gameId', 'game1')] = my_game
 
     setup = my_game.get_setup()
