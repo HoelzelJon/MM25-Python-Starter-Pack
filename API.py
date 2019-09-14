@@ -79,8 +79,8 @@ class Game:
             if unit.id == tile.unit:
                 return unit
         return None
-    # Get the shortest valid path from start to end position while avoiding tiles in tilesToAvoid
-    # Start and end position are tuples (x,y)
+    # Get the shortest valid path from start to end position while avoiding tiles in tiles_to_avoid
+    # Start and end position are tuples (x,y). tiles_to_avoid is a list of such tuples
     def path_to(self, start_position, end_position, tiles_to_avoid=[]):
         q = Queue()
         q.put((start_position, []))
@@ -126,10 +126,11 @@ class Game:
         return None
 
     """
-      Given a unit_id and direction, returns where an attack in a certain direction would land on the gameAPI
-      Returns a list of tuples of the form (attack_damage, position) where position is a Position Object
+      Given a unit_id and direction, returns where an attack in a certain direction would land on the map
+      Optionally provide a position to use instead of the units current position. position should be tuple of the location (x,y)
+      Returns a list of tuples of the form (attack_damage, pos) where pos is a Position Object
     """
-    def get_positions_of_attack_pattern(self, unit_id, direction):
+    def get_positions_of_attack_pattern(self, unit_id, direction, position = None):
         unit = self.get_unit(unit_id)
         attack_pattern = unit.attack
         if direction == 'RIGHT':
@@ -150,8 +151,13 @@ class Game:
                 if attack == 0:
                     continue
                 # assume that unit is at the center of the 7 by 7 attack pattern
-                x_coordinate = unit.pos.x + col - 3
-                y_coordinate = unit.pos.y + row - 3
+                x_pos = unit.pos.x
+                y_pos = unit.pos.y
+                if position:
+                    x_pos = position[0]
+                    y_pos = position[1]
+                x_coordinate = x_pos + col - 3
+                y_coordinate = y_pos + row - 3
                 if x_coordinate >= 0 and x_coordinate < len(self.game["map"]["tiles"][0]) and y_coordinate >= 0 and y_coordinate < len(self.game["map"]["tiles"]):
                     attacks.append((attack, Position({"x": x_coordinate, "y": y_coordinate})))
         return attacks
