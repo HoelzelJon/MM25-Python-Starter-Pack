@@ -2,6 +2,7 @@ from flask import Flask, request
 import json
 import sys
 from importlib import import_module
+import os
 
 games = {}
 app = Flask(__name__)
@@ -38,4 +39,4 @@ def game_over():
 if __name__ == "__main__":
     module = import_module(sys.argv[1])  # import the player strategy file
     Strategy = getattr(module, 'Strategy')
-    app.run(port=int(sys.argv[2]), debug=True)
+    app.run(port=int(os.getenv('PORT')), debug=True)
