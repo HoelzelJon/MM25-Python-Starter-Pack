@@ -13,7 +13,7 @@ class Unit:
         self.attack = unit_json["attack"]
         self.isAlive = unit_json["isAlive"]
         self.id = unit_json["id"]
-        self.player_id = unit_json["playerId"]
+        self.player_id = unit_json["playerNum"]
         self.pos = Position(unit_json["pos"])
 
 
@@ -21,7 +21,6 @@ class Tile:
     def __init__(self, tile_json):
         self.id = tile_json["id"]
         self.hp = tile_json["hp"]
-        self.unit = tile_json.get("Unit", None)
         self.type = tile_json["type"]
 
 
@@ -46,16 +45,14 @@ class Game:
 
     def get_units_for_team(self, player_id):
         units = []
-        for row in range(len(self.game["map"]["tiles"])):
-            for col in range(len(self.game["map"]["tiles"][row])):
-                current_tile = self.get_tile((row, col))
-                if current_tile.unit and current_tile.unit.player_id == player_id:
-                    units.append(current_tile.unit)
+        for unit in self.game["units"]:
+            if unit["playerNum"] == player_id:
+                units.append(Unit(unit))
         return units
 
     # Returns the player"s units
     def get_my_units(self):
-        self.get_units_for_team(self.player_id)
+        return self.get_units_for_team(self.player_id)
 
     # Returns the opponents units
     def get_enemy_units(self):
@@ -66,20 +63,25 @@ class Game:
 
     # Return the tile object at a give x and y. Takes a position tuple (x,y)
     def get_tile(self, position):
-        tile_json =  self.game["map"]["tiles"][position[0]][position[1]]
+        tile_json =  self.game["tiles"][position[0]][position[1]]
         return Tile(tile_json)
 
     # Returns the unit at the given position, if there is one. Takes a position
     # tuple (x,y)  v
     def get_unit_at(self, position):
-        tile = self.get_tile((position[0], position[1]))
-        return tile.unit
+        unit_at_pos = None
+        for unit in self.game["units"]:
+            if unit["pos"]["x"] == position[0] and unit["pos"]["y"] == position[1]:
+                unit_at_pos = Unit(unit)
+                break
+        return unit_at_pos
+
     # Get the shortest valid path from start to end position while avoiding tiles in tiles_to_avoid
     # Start and end position are tuples (x,y). tiles_to_avoid is a list of such tuples
     def path_to(self, start_position, end_position, tiles_to_avoid=[]):
         q = Queue()
         q.put((start_position, []))
-        visited = [[False for i in range(len(self.game["map"]["tiles"]))] for j in range(len(self.game["map"]["tiles"]))]
+        visited = [[False for i in range(len(self.game["tiles"]))] for j in range(len(self.game["tiles"]))]
         while not q.empty():
             position, directions = q.get()
             if visited[position[1]][position[0]]:
@@ -94,12 +96,12 @@ class Game:
                 left_directions.append("LEFT")
                 q.put((left, left_directions))
             right = (position[0] + 1, position[1])
-            if not ((right[0] >= len(self.game["map"]["tiles"])) or (right in tiles_to_avoid) or (self.get_tile(right).type != "BLANK")):
+            if not ((right[0] >= len(self.game["tiles"])) or (right in tiles_to_avoid) or (self.get_tile(right).type != "BLANK")):
                 right_directions = copy.copy(directions)
                 right_directions.append("RIGHT")
                 q.put((right, right_directions))
             down = (position[0], position[1] + 1)
-            if not ((down[1] >= len(self.game["map"]["tiles"][0])) or (down in tiles_to_avoid) or (self.get_tile(down).type != "BLANK")):
+            if not ((down[1] >= len(self.game["tiles"][0])) or (down in tiles_to_avoid) or (self.get_tile(down).type != "BLANK")):
                 down_directions = copy.copy(directions)
                 down_directions.append("DOWN")
                 q.put((down, down_directions))
@@ -123,7 +125,7 @@ class Game:
     """
       Given a unit_id and direction, returns where an attack in a certain direction would land on the map
       Optionally provide a position to use instead of the units current position. position should be tuple of the location (x,y)
-      Returns a list of tuples of the form (attack_damage, pos) where pos is a Position Object
+      Returns a list of tuples of the form (pos, attack_damage) where pos is a Position Object
     """
     def get_positions_of_attack_pattern(self, unit_id, direction, position = None):
         unit = self.get_unit(unit_id)
@@ -153,8 +155,8 @@ class Game:
                     y_pos = position[1]
                 x_coordinate = x_pos + col - 3
                 y_coordinate = y_pos + row - 3
-                if x_coordinate >= 0 and x_coordinate < len(self.game["map"]["tiles"]) and y_coordinate >= 0 and y_coordinate < len(self.game["map"]["tiles"][0]):
-                    attacks.append((attack, Position({"x": x_coordinate, "y": y_coordinate})))
+                if x_coordinate >= 0 and x_coordinate < len(self.game["tiles"]) and y_coordinate >= 0 and y_coordinate < len(self.game["tiles"][0]):
+                    attacks.append((Position({"x": x_coordinate, "y": y_coordinate}), attack))
         return attacks
 
     def rotate_attack_pattern(self, attack):
