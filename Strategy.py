@@ -16,10 +16,12 @@ class Strategy(Game):
         return units
 
     def do_turn(self):
-        decision = {}
-        priorities = [1, 2, 3]
-        decision['priorities'] = priorities
-        decision['movements'] = [['DOWN', 'DOWN', 'DOWN', 'DOWN']
-                                 for i in range(3)]
-        decision['attacks'] = ['UP', 'LEFT', 'RIGHT']
+        my_units = self.get_my_units()
+
+        decision = [{
+            "priority": i+1,
+            "movement": ["DOWN"]*my_units[i].speed,
+            "attack": "DOWN",
+            "unitId": my_units[i].id
+            } for i in range(len(my_units))]
         return decision

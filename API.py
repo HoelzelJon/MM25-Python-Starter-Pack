@@ -11,7 +11,6 @@ class Unit:
         self.hp = unit_json["hp"]
         self.speed = unit_json["speed"]
         self.attack = unit_json["attack"]
-        self.isAlive = unit_json["isAlive"]
         self.id = unit_json["id"]
         self.player_id = unit_json["playerNum"]
         self.pos = Position(unit_json["pos"])
