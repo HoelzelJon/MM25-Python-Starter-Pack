@@ -36,9 +36,9 @@ def game_over():
     return json.dumps(end_state)
 
 
-@app.rout('/health', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def health():
-    return 200
+    return json.dumps(200)
 
 if __name__ == "__main__":
     module = import_module(sys.argv[1])  # import the player strategy file
