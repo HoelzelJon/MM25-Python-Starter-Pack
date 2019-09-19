@@ -7,7 +7,10 @@ class Strategy(Game):
         for i in range(3):
             unit = {"health": 5, "speed": 4}
             unit["attackPattern"] = [[0] * 7 for j in range(7)]
+            # if you are player1, unitIds will be 1,2,3. If you are player2, they will be 4,5,6
             unit["unitId"] = i + 1
+            if self.player_id == 2:
+                unit["unitId"] += 3
             unit["terrainPattern"] = [[False]*7 for j in range(7)]
             units.append(unit)
         return units
