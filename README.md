@@ -42,5 +42,9 @@ Here's all the code you need to get started with making a bot for MechMania in P
 
 Use `mm help` for more help or `mm play` for information about the different options/flags you can use while running a game!
 
+# What's this `ImportError: No module named queue`?
+
+If you're getting this error, you most likely have python 2 running instead of python 3. To fix this, change `python` to `python3` in the `mm.json` file.
+
 # Game API Information
 You will be writing your code inside of the `Strategy.py` file. Note, that the `Strategy` class inherits the `Game` class from `API.py`, so all the instance methods for a `Game` object are available to you. You can find documentation for these methods in [API.py](https://github.com/HoelzelJon/MM25-Python-Starter-Pack/blob/master/API.py).
