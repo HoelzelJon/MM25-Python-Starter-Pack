@@ -1,12 +1,15 @@
 from queue import Queue
 import copy
+# class for Position Object
 class Position:
+    # A position will have an x and y coordinate
     def __init__(self, position_json):
         self.x = position_json["x"]
         self.y = position_json["y"]
 
-
+# Class for a Unit Object
 class Unit:
+    # A unit will have the following fields
     def __init__(self, unit_json):
         self.hp = unit_json["hp"]
         self.speed = unit_json["speed"]
@@ -16,21 +19,21 @@ class Unit:
         self.player_id = unit_json["playerNum"]
         self.pos = Position(unit_json["pos"])
 
-
+# Class for a Tile Object
 class Tile:
+    # A Tile will have an id, hp, and type where type is either 'BLANK', 'DESTRUCTIBLE', or 'INDESTRUCTIBLe'
     def __init__(self, tile_json):
         self.id = tile_json["id"]
         self.hp = tile_json["hp"]
         self.type = tile_json["type"]
 
-
+# Class for a Game Object
 class Game:
-    # pass in player Id as 1 or 2
+    # A Game Object will have a player_id, game_id, and the game represented as a json
     def __init__(self, game_json):
         self.game = game_json
         self.player_id = self.game['playerNum']
         self.game_id = self.game["gameId"]
-
     def get_setup(self):
         raise NotImplementedError(
             "Please Implement this method in a \"Strategy\" class")
@@ -48,6 +51,13 @@ class Game:
     def update_game(self, game_json):
         self.game = game_json
 
+    """
+        Given a player_id, returns the units for that team.
+        INPUT:
+            player_id: The id of the player to get units for
+        OUTPUT:
+            A list of Unit objects corresponding to that player_id
+    """
     def get_units_for_team(self, player_id):
         units = []
         for unit in self.game["units"]:
@@ -55,24 +65,44 @@ class Game:
                 units.append(Unit(unit))
         return units
 
-    # Returns the player"s units
+    """
+        Gets my units
+        OUTPUT:
+            A list of Unit Objects corresponding to my units
+    """
     def get_my_units(self):
         return self.get_units_for_team(self.player_id)
 
-    # Returns the opponents units
+    """
+        Gets the units for the enemy player
+        OUTPUT:
+            A list of Unit Objects corresponding to the enemy's units
+    """
     def get_enemy_units(self):
         if self.player_id == 1:
             return self.get_units_for_team(2)
         else:
             return self.get_units_for_team(1)
 
-    # Return the tile object at a give x and y. Takes a position tuple (x,y)
+    """
+        Returns the Tile at a given x and y
+        INPUT:
+            position: a tuple (x,y) specifying the desired x and y coordinates
+        OUTPUT:
+            The Tile Object corresponding to that position
+    """
     def get_tile(self, position):
         tile_json =  self.game["tiles"][position[0]][position[1]]
         return Tile(tile_json)
 
-    # Returns the unit at the given position, if there is one. Takes a position
-    # tuple (x,y)  v
+    """
+        Returns the unit at a given position
+        INPUT:
+            position: a tuple (x,y) specifying the desired x and y coordinates
+        OUTPUT:
+            If there is a unit at that position, the Unit object at that position
+            If no unit is at that position, return None
+    """
     def get_unit_at(self, position):
         unit_at_pos = None
         for unit in self.game["units"]:
@@ -81,7 +111,16 @@ class Game:
                 break
         return unit_at_pos
 
-    # Get the shortest valid path from start to end position while avoiding tiles in tiles_to_avoid
+    """
+        Get the shortest valid path from start to end position while avoiding tiles in tiles_to_avoid
+        INPUT:
+            start_position: a tuple (x,y) specifying the x and y coordinate of the start_position
+            end_position: a tuple (x,y) specifying the x and y coordinates of the end position
+            tiles_to_avoid: a list of tuples (x,y) specifying the x and y coordinates of tiles to avoid
+        OUTPUT:
+            A list of directions ('UP', 'DOWN', 'LEFT', or 'RIGHT') specifying how to get from the start_position to the end_position while avoiding the specified tiles
+            If no path exists, returns an None
+    """
     # Start and end position are tuples (x,y). tiles_to_avoid is a list of such tuples
     def path_to(self, start_position, end_position, tiles_to_avoid=[]):
         q = Queue()
