@@ -17,7 +17,7 @@ Here's all the code you need to get started with making a bot for MechMania in P
 4. Run `mm download` to download required files.
 
 5. For the python starter pack, you will have to set up pip
-    * To set up pip, you can follow [this guide](https://pip.pypa.io/en/stable/installing/) .
+    * To set up pip, you can follow [this guide](https://www.makeuseof.com/tag/install-pip-for-python/) .
     * You will also need [Flask](https://pypi.org/project/Flask/), which you can get via the command line by running `pip install Flask` (or `pip3 install Flask` if you have pip3)
 
 # Setup

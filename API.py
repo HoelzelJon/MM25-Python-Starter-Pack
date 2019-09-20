@@ -156,7 +156,13 @@ class Game:
                 q.put((up, up_directions))
         return None
 
-    # gets the unit with a given id
+    """
+        Gets the Unit for a specific unit_id
+        INPUT:
+            unit_id: The id of the desired unit
+        OUTPUT:
+            A Unit object corresponding the desired unit
+    """
     def get_unit(self, unit_id):
         for unit in self.get_my_units():
             if unit.id == unit_id:
@@ -167,9 +173,15 @@ class Game:
         return None
 
     """
-      Given a unit_id and direction, returns where an attack in a certain direction would land on the map
-      Optionally provide a position to use instead of the units current position. position should be tuple of the location (x,y)
-      Returns a list of tuples of the form (pos, attack_damage) where pos is a Position Object
+        Given a unit_id and direction, returns where an attack in a certain direction would land on the map
+        INPUT:
+            unit_id: the id of the unit we want the attack pattern for
+            direction: Either 'UP', 'DOWN', 'LEFT', or 'RIGHT'. The direction we want to attack in
+            position (optional): a tuple (x,y) specifying the x and y coordinates of a position to attack from rather than the unit's current position.
+        OUTPUT:
+            A list of tuples of the form (pos, attack_damage)
+            pos: a Position Object
+            attack_damage: a positive value indicating the damage at that position
     """
     def get_positions_of_attack_pattern(self, unit_id, direction, position = None):
         unit = self.get_unit(unit_id)
@@ -203,6 +215,14 @@ class Game:
                     attacks.append((Position({"x": x_coordinate, "y": y_coordinate}), attack))
         return attacks
 
+
+    """
+        Given an attack pattern, rotates it 90 degrees clockwise
+        INPUT:
+            attack: a 7x7 2d list indicating the attack pattern
+        OUTPUT:
+            The attack pattern rotated 90 degrees clockwise
+    """
     def rotate_attack_pattern(self, attack):
         list_of_tuples = zip(*attack[::-1])
         return [list(elem) for elem in list_of_tuples]
