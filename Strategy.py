@@ -13,6 +13,7 @@ class Strategy(Game):
                 "unitId": An integer indicating the desired id for that unit. In this provided example, we assign Ids 1,2,3 if you are player1, or 4,5,6 if you are player2
                 "attackPattern": a 7x7 2d integer list indicating the desired attack pattern for that unit
                 "terrainPattern": a 7x7 2d boolean list indicating the desired terrain pattern for that unit.
+        Note: terrainPattern and attackPattern should be indexed x,y. with (0,0) being the bottom left
     """
     def get_setup(self):
         units = []
