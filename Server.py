@@ -32,13 +32,14 @@ def turn():
 @app.route('/game_over', methods=['POST'])
 def game_over():
     end_state = request.get_json(force=True)
-    games.pop(end_state.get('gameId', 'game'), None)
+    game = games.pop(end_state.get('gameId', 'game'), None)
+    game.game_over(end_state.get('result', 'TIE'));
     return json.dumps(end_state)
 
 
 @app.route('/health', methods=['GET'])
 def health():
-    return json.dumps(200)
+    return "200"
 
 if __name__ == "__main__":
     module = import_module(sys.argv[1])  # import the player strategy file

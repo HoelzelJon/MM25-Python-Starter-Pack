@@ -11,6 +11,7 @@ class Unit:
         self.hp = unit_json["hp"]
         self.speed = unit_json["speed"]
         self.attack = unit_json["attack"]
+        self.terrain = unit_json["terrain"]
         self.id = unit_json["id"]
         self.player_id = unit_json["playerNum"]
         self.pos = Position(unit_json["pos"])
@@ -37,6 +38,11 @@ class Game:
     def do_turn(self):
         raise NotImplementedError(
             "Please Implement this method in a \"Strategy\" class")
+
+	# Implement this in the "Strategy" class if you want to do something specific
+	# when a game ends
+    def game_over(self, result):
+        pass
 
     # updates the game json. Called every turn
     def update_game(self, game_json):
