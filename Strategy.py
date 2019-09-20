@@ -14,17 +14,24 @@ class Strategy(Game):
                 "attackPattern": a 7x7 2d integer list indicating the desired attack pattern for that unit
                 "terrainPattern": a 7x7 2d boolean list indicating the desired terrain pattern for that unit.
         Note: terrainPattern and attackPattern should be indexed x,y. with (0,0) being the bottom left
+        If player_id is 1, UnitIds for the bots should be 1,2,3. If player_id is 2, UnitIds should be 4,5,6
     """
     def get_setup(self):
         units = []
         for i in range(3):
-            unit = {"health": 5, "speed": 4}
+            unit = {"health": 5, "speed": 5}
             unit["attackPattern"] = [[0] * 7 for j in range(7)]
             # if you are player1, unitIds will be 1,2,3. If you are player2, they will be 4,5,6
             unit["unitId"] = i + 1
             if self.player_id == 2:
                 unit["unitId"] += 3
             unit["terrainPattern"] = [[False]*7 for j in range(7)]
+            # These sample bot will do damage to the tiles to its left, right, and up. And build terrain behind it
+            unit["attackPattern"][3][2] = 2
+            unit["attackPattern"][3][4] = 2
+            unit["attackPattern"][2][3] = 2
+            unit["attackPattern"][4][2] = 2
+            unit["terrainPattern"][3][2] = True
             units.append(unit)
         return units
 
