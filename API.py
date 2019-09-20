@@ -145,7 +145,7 @@ class Game:
                 right_directions.append("RIGHT")
                 q.put((right, right_directions))
             down = (position[0], position[1] - 1)
-            if not ((down[1] < 0)) or (down in tiles_to_avoid) or (self.get_tile(down).type != "BLANK")):
+            if not ((down[1] < 0) or (down in tiles_to_avoid) or (self.get_tile(down).type != "BLANK")):
                 down_directions = copy.copy(directions)
                 down_directions.append("DOWN")
                 q.put((down, down_directions))
