@@ -28,7 +28,6 @@ class Strategy(Game):
             unit["terrainPattern"] = [[False]*7 for j in range(7)]
             # These sample bot will do damage to the tiles to its left, right, and up. And build terrain behind it
             unit["attackPattern"][3][2] = 2
-            unit["attackPattern"][3][4] = 2
             unit["attackPattern"][2][3] = 2
             unit["attackPattern"][4][2] = 2
             unit["terrainPattern"][3][2] = True
