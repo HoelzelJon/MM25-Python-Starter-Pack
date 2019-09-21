@@ -44,4 +44,4 @@ def health():
 if __name__ == "__main__":
     module = import_module(sys.argv[1])  # import the player strategy file
     Strategy = getattr(module, 'Strategy')
-    app.run(host='0.0.0.0', port=int(os.environ['PORT']))
+    app.run(host='0.0.0.0', port=int(os.environ['PORT']), debug=True)
