@@ -41,6 +41,12 @@ def game_over():
 def health():
     return "200"
 
+@app.route('/actuator/shutdown', methods=['POST'])
+def shutdown():
+	func = request.environ.get('werkzeug.server.shutdown')
+	func()
+	return "shutdown"
+
 if __name__ == "__main__":
     module = import_module(sys.argv[1])  # import the player strategy file
     Strategy = getattr(module, 'Strategy')
