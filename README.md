@@ -35,3 +35,5 @@ If you're getting this error, you most likely have python 2 running instead of p
 
 # Game API Information
 You will be writing your code inside of the `Strategy.py` file. Note, that the `Strategy` class inherits the `Game` class from `API.py`, so all the instance methods for a `Game` object are available to you. You can find documentation for these methods in [API.py](https://github.com/HoelzelJon/MM25-Python-Starter-Pack/blob/master/API.py).
+
+Most of the game state data is stored in the `.game` field of a Game object, which is a dictionary. This dictionary contains fields like `["turnsTaken"]`, the turn index, and `["units"]` an 

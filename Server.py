@@ -23,7 +23,10 @@ def game_init():
 @app.route('/turn', methods=['POST'])
 def turn():
     game_state = request.get_json(force=True)
-    my_game = games[game_state.get('gameId', 'game1')]
+    game_id = game_state.get('gameId', 'game1')
+    if not game_id in games:
+        games[game_id] = Strategy(game_state)
+    my_game = games[game_id]
     my_game.update_game(game_state)
     decision = my_game.do_turn()
     return json.dumps(decision)

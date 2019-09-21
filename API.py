@@ -1,5 +1,7 @@
 from queue import Queue
 import copy
+import sys
+
 # class for Position Object
 class Position:
     # A position will have an x and y coordinate
@@ -27,6 +29,7 @@ class Tile:
         self.hp = tile_json["hp"]
         self.type = tile_json["type"]
 
+
 # Class for a Game Object
 class Game:
     # A Game Object will have a player_id, game_id, and the game represented as a json
@@ -34,6 +37,15 @@ class Game:
         self.game = game_json
         self.player_id = self.game['playerNum']
         self.game_id = self.game["gameId"]
+        if "tiles" in game_json:
+            self.tiles = game_json["tiles"]
+            self.turnsTaken = game_json["turnsTaken"]
+            self.units = game_json["units"]
+        else:
+            self.tiles = []
+            self.units = []
+            self.turnsTaken = 0
+
     def get_setup(self):
         raise NotImplementedError(
             "Please Implement this method in a \"Strategy\" class")
@@ -50,6 +62,11 @@ class Game:
     # updates the game json. Called every turn
     def update_game(self, game_json):
         self.game = game_json
+        self.turnsTaken = self.game["turnsTaken"]
+        self.units = [Unit(unit_json) for unit_json in self.game["units"]]
+        self.tiles = [[Tile(tile_json) for tile_json in tile_json_list] for tile_json_list in self.game["tiles"]]
+        self.game_id = self.game["gameId"]
+        self.player_id = self.game["playerNum"]
 
     """
         Given a player_id, returns the units for that team.
